@@ -22,8 +22,9 @@ public final class Constants {
   public static final int LEFT_DRIVE_ID = 1;
   public static final int RIGHT_DRIVE_ID = 2;
 
-public static final double DEADZONE = 0.2;
+public static final double DEADZONE = 0.05;
 
+public static final double SLOW_SPEED = 0.2;
 public static final double DRIVE_SPEED = 0.3;
 public static final double TURBO_SPEED = 0.6;
 

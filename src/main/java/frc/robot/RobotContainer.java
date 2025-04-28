@@ -62,31 +62,28 @@ private final XboxController driverController = new XboxController(DRIVER_CONTRO
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // new JoystickButton(driverController, XboxController.Button.kB.value)
-    //     .onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
 
     new JoystickButton(driverController, XboxController.Button.kRightBumper.value)
                 .whileTrue(new RightArmCommand(rightArmSubsystem, 0.8));
     new JoystickButton(driverController, XboxController.Button.kLeftBumper.value)
                 .whileTrue(new LeftArmCommand(leftArmSubsystem, 1));
-    new JoystickButton(driverController, XboxController.Button.kBack.value)
-                .whileTrue(new LeftArmCommand(leftArmSubsystem, -0.48));
-    new JoystickButton(driverController, XboxController.Button.kStart.value)
-                .whileTrue(new RightArmCommand(rightArmSubsystem, -0.3));
 
-new JoystickButton(driverController, XboxController.Button.kX.value)
-                .whileTrue(new ClockwiseArmCommand(leftArmSubsystem, rightArmSubsystem));
-    new JoystickButton(driverController, XboxController.Button.kY.value)
-                .whileTrue(new CounterClockwiseArmCommand(leftArmSubsystem, rightArmSubsystem));
+    new Trigger(()-> getLeftTriggerValue()).whileTrue(new LeftArmCommand(leftArmSubsystem, -0.48));
+    new Trigger(() -> getRightTriggerValue()).whileTrue(new RightArmCommand(rightArmSubsystem, -0.3));
+
+    // new JoystickButton(driverController, XboxController.Button.kX.value)
+    //             .whileTrue(new ClockwiseArmCommand(leftArmSubsystem, rightArmSubsystem));
+    // new JoystickButton(driverController, XboxController.Button.kY.value)
+    //             .whileTrue(new CounterClockwiseArmCommand(leftArmSubsystem, rightArmSubsystem));
+
 
     new JoystickButton(driverController, XboxController.Button.kB.value)
                 .whileTrue(new DanceCommand(leftArmSubsystem, rightArmSubsystem));
     new JoystickButton(driverController, XboxController.Button.kA.value)
                 .whileTrue(new WaveCommand(rightArmSubsystem));
+
+    new JoystickButton(driverController, XboxController.Button.kStart.value).whileTrue(tankSubsystem.setNormalCommand());
+    new JoystickButton(driverController, XboxController.Button.kBack.value).whileTrue(tankSubsystem.setSlowCommand());
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
@@ -119,6 +116,16 @@ new JoystickButton(driverController, XboxController.Button.kX.value)
   }
 
   public boolean getRightTriggerValue(){
+    if ( driverController != null ) {
+      if(driverController.getRightTriggerAxis() >= 0.5){
+        return true;
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }
+  public boolean getLeftTriggerValue(){
     if ( driverController != null ) {
       if(driverController.getRightTriggerAxis() >= 0.5){
         return true;
